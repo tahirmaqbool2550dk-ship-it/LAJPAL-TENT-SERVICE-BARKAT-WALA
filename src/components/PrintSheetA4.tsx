@@ -12,14 +12,14 @@ export interface FitMetrics {
   scale: number;
 }
 
-export interface PrintSheet5x7Handle {
+export interface PrintSheetA4Handle {
   fitNow: () => void;
 }
 
-interface PrintSheet5x7Props {
+interface PrintSheetA4Props {
   bill: Bill;
   sheetRef: React.RefObject<HTMLDivElement | null>;
-  controllerRef?: React.RefObject<PrintSheet5x7Handle | null>;
+  controllerRef?: React.RefObject<PrintSheetA4Handle | null>;
   onFitChange?: (metrics: FitMetrics) => void;
 }
 
@@ -30,7 +30,7 @@ const PrintHeaderPhoto: React.FC<{
   const [failed, setFailed] = useState(false);
 
   return (
-    <div className="p57-photo-box">
+    <div className="pa4-photo-box">
       {!failed ? (
         <img
           src={src}
@@ -42,8 +42,8 @@ const PrintHeaderPhoto: React.FC<{
         />
       ) : (
         <div
-          className="flex h-full w-full items-center justify-center px-1 text-center font-urdu"
-          style={{ color: '#F5D076', fontSize: '9px' }}
+          className="flex h-full w-full items-center justify-center px-2 text-center font-urdu"
+          style={{ color: '#F5D076', fontSize: '11px' }}
         >
           {alt}
         </div>
@@ -52,7 +52,7 @@ const PrintHeaderPhoto: React.FC<{
   );
 };
 
-export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
+export const PrintSheetA4: React.FC<PrintSheetA4Props> = ({
   bill,
   sheetRef,
   controllerRef,
@@ -67,12 +67,12 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
     const content = contentRef.current;
     if (!viewport || !content) return;
 
-    const targetW = viewport.clientWidth || 449;
-    const targetH = viewport.clientHeight || 643;
-    const safeW = Math.max(100, targetW - 2);
-    const safeH = Math.max(100, targetH - 4);
+    const targetW = viewport.clientWidth || 722;
+    const targetH = viewport.clientHeight || 1056;
+    const safeW = Math.max(200, targetW - 2);
+    const safeH = Math.max(200, targetH - 6);
 
-    // Reset inline sizing/transform before testing tiers
+    // Reset inline sizing/transform before testing progressive density tiers
     content.style.transform = 'none';
     content.style.transformOrigin = 'top left';
     content.style.width = `${targetW}px`;
@@ -88,13 +88,13 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
       }
     }
 
-    // Pass 2: Even Tier 3 overflows 5x7 at 1:1 -> keep Tier 3 and solve optimal unscaled width + uniform scale
+    // Pass 2: Even Tier 3 overflows A4 at 1:1 -> keep Tier 3 and proportionally scale to fit 1 A4 page
     content.setAttribute('data-tier', '3');
     let measuredH = content.scrollHeight;
     let measuredW = content.scrollWidth;
 
     let scale = Math.min(1, Math.sqrt(safeH / Math.max(measuredH, 1)));
-    scale = Math.max(0.18, scale);
+    scale = Math.max(0.15, scale);
 
     for (let pass = 0; pass < 5; pass++) {
       const candidateW = Math.max(targetW, Math.floor(safeW / scale));
@@ -115,16 +115,16 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
         break;
       }
 
-      scale = pass === 4 ? nextScale * 0.99 : Math.max(0.15, (scale + nextScale) / 2);
+      scale = pass === 4 ? nextScale * 0.99 : Math.max(0.12, (scale + nextScale) / 2);
     }
 
-    const finalUnscaledW = Math.max(targetW, Math.floor(safeW / Math.max(scale, 0.12)));
+    const finalUnscaledW = Math.max(targetW, Math.floor(safeW / Math.max(scale, 0.1)));
     content.style.width = `${finalUnscaledW}px`;
     const finalH = content.scrollHeight;
     const finalW = content.scrollWidth;
     const finalScale = Math.min(
       1,
-      (safeH - 1) / Math.max(finalH, 1),
+      (safeH - 2) / Math.max(finalH, 1),
       (safeW - 1) / Math.max(finalW, 1)
     );
 
@@ -146,7 +146,7 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
     fitToPage();
   }, [bill, fitToPage]);
 
-  // Refit once custom Urdu fonts finish loading and right before browser prints (e.g., Ctrl+P)
+  // Refit when custom Urdu fonts finish loading and right before browser prints (e.g., Ctrl+P)
   useEffect(() => {
     let active = true;
     const handleRefit = () => {
@@ -169,28 +169,28 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
   }, [fitToPage]);
 
   return (
-    <div className="print-5x7-wrapper" aria-hidden="true">
+    <div className="print-a4-wrapper" aria-hidden="true">
       <div
-        id="printable-5x7-sheet"
+        id="printable-a4-sheet"
         ref={sheetRef}
         dir="rtl"
-        className="p57-sheet"
+        className="pa4-sheet"
         style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
       >
-        <div ref={viewportRef} className="p57-viewport">
-          <div ref={contentRef} data-tier="0" dir="rtl" className="p57-content">
+        <div ref={viewportRef} className="pa4-viewport">
+          <div ref={contentRef} data-tier="0" dir="rtl" className="pa4-content">
             {/* Letterhead Header */}
-            <div className="p57-header-wrap">
+            <div className="pa4-header-wrap" style={{ borderColor: '#0B1F3A' }}>
               <div
-                className="p57-banner"
+                className="pa4-banner"
                 style={{
                   backgroundColor: '#0B1F3A',
                   color: '#ffffff',
-                  borderBottom: '2.5px solid #C89B3C',
+                  borderBottom: '3px solid #C89B3C',
                 }}
               >
                 {/* Top Tent & Marquee Photographs */}
-                <div className="p57-photos-grid">
+                <div className="pa4-photos-grid">
                   <PrintHeaderPhoto
                     src="/src/assets/images/pakistani_tent_canopy_1795234895117.jpg"
                     alt="لجپال ٹینٹ سروس برکت والا - شامیانہ اور ٹینٹ انتظام"
@@ -201,32 +201,39 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
                   />
                 </div>
 
-                <p dir="ltr" className="p57-en-title font-latin font-extrabold uppercase" style={{ color: '#F5D076' }}>
+                <p
+                  dir="ltr"
+                  className="pa4-en-title font-latin font-extrabold uppercase"
+                  style={{ color: '#F5D076' }}
+                >
                   LAJPAL TENT SERVICE BARKAT WALA
                 </p>
-                <h2 className="p57-ur-title font-urdu font-bold" style={{ color: '#ffffff' }}>
+                <h2 className="pa4-ur-title font-urdu font-bold" style={{ color: '#ffffff' }}>
                   لجپال ٹینٹ سروس برکت والا
                 </h2>
 
-                <p dir="rtl" className="p57-desc font-urdu" style={{ color: '#e2e8f0' }}>
+                <p dir="rtl" className="pa4-desc font-urdu" style={{ color: '#e2e8f0' }}>
                   شادی بیاہ، ولیمہ، محافل اور ہر قسم کی تقریبات کے لیے معیاری ٹینٹ، شامیانہ، مارکی، کرسیاں، میزیں اور قالین کی مکمل سروس
                 </p>
 
                 <div
                   dir="ltr"
-                  className="p57-contacts"
-                  style={{ borderColor: 'rgba(255,255,255,0.2)' }}
+                  className="pa4-contacts"
+                  style={{ borderColor: 'rgba(255,255,255,0.18)' }}
                 >
-                  <p className="font-latin font-semibold" style={{ color: '#F5D076' }}>
+                  <p className="font-latin font-semibold tracking-wide" style={{ color: '#F5D076' }}>
                     Maqbool Ahmad:{' '}
                     <span className="font-num font-bold" style={{ color: '#ffffff' }}>
                       0301-3927492
                     </span>
                   </p>
-                  <p className="inline-flex items-center justify-center gap-1 font-latin font-semibold" style={{ color: '#F5D076' }}>
+                  <p
+                    className="inline-flex items-center justify-center gap-1.5 font-latin font-semibold tracking-wide"
+                    style={{ color: '#F5D076' }}
+                  >
                     <svg
                       viewBox="0 0 32 32"
-                      className="p57-wa-icon shrink-0"
+                      className="pa4-wa-icon shrink-0"
                       aria-label="WhatsApp"
                       role="img"
                     >
@@ -246,91 +253,88 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
                 </div>
               </div>
 
-              <div className="p57-subhead-bar">
-                <span className="p57-subhead-title font-urdu font-bold" style={{ color: '#0B1F3A' }}>
+              <div className="pa4-subhead-bar">
+                <span className="pa4-subhead-title font-urdu font-bold" style={{ color: '#0B1F3A' }}>
                   کمپیوٹرائزڈ کرایہ بل / انوائس
-                </span>
-                <span className="p57-paper-label font-urdu" style={{ color: '#475569' }}>
-                  کاغذ کا سائز: <span dir="ltr" className="font-num font-bold">5 × 7</span> انچ
                 </span>
               </div>
             </div>
 
-            {/* Bill & Customer Information — Complete 6 Fields (Never Truncated) */}
-            <div className="p57-info-grid" style={{ borderColor: '#cbd5e1' }}>
-              <div className="p57-info-cell" style={{ borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }}>
-                <span className="p57-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
+            {/* Bill & Customer Information — Original 6-Row Order (Full Text Preserved) */}
+            <div className="pa4-info-list" style={{ borderColor: '#cbd5e1' }}>
+              <div className="pa4-info-row" style={{ borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }}>
+                <span className="pa4-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
                   گاہک کا نام:
                 </span>
-                <span className="p57-info-val font-urdu font-semibold" style={{ color: '#0f172a' }}>
+                <span className="pa4-info-val font-urdu font-semibold" style={{ color: '#0f172a' }}>
                   {bill.customerName.trim() || '—'}
                 </span>
               </div>
 
-              <div className="p57-info-cell" style={{ borderColor: '#cbd5e1', backgroundColor: '#ffffff' }}>
-                <span className="p57-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
+              <div className="pa4-info-row" style={{ borderColor: '#cbd5e1', backgroundColor: '#ffffff' }}>
+                <span className="pa4-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
                   موبائل نمبر:
                 </span>
-                <span dir="ltr" className="p57-info-val font-num font-semibold" style={{ color: '#0f172a' }}>
+                <span dir="ltr" className="pa4-info-val font-num font-semibold" style={{ color: '#0f172a' }}>
                   {bill.mobileNumber.trim() || '—'}
                 </span>
               </div>
 
-              <div className="p57-info-cell" style={{ borderColor: '#cbd5e1', backgroundColor: '#ffffff' }}>
-                <span className="p57-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
+              <div className="pa4-info-row" style={{ borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }}>
+                <span className="pa4-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
                   تاریخ:
                 </span>
-                <span dir="ltr" className="p57-info-val font-num font-semibold" style={{ color: '#0f172a' }}>
+                <span dir="ltr" className="pa4-info-val font-num font-semibold" style={{ color: '#0f172a' }}>
                   {formatDisplayDate(bill.date)}
                 </span>
               </div>
 
-              <div className="p57-info-cell" style={{ borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }}>
-                <span className="p57-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
+              <div className="pa4-info-row" style={{ borderColor: '#cbd5e1', backgroundColor: '#ffffff' }}>
+                <span className="pa4-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
                   تقریب کی تاریخ:
                 </span>
-                <span dir="ltr" className="p57-info-val font-num font-semibold" style={{ color: '#0f172a' }}>
+                <span dir="ltr" className="pa4-info-val font-num font-semibold" style={{ color: '#0f172a' }}>
                   {formatDisplayDate(bill.eventDate)}
                 </span>
               </div>
 
-              <div className="p57-info-cell" style={{ borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }}>
-                <span className="p57-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
+              <div className="pa4-info-row" style={{ borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }}>
+                <span className="pa4-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
                   تقریب کا مقام:
                 </span>
-                <span className="p57-info-val font-urdu font-semibold" style={{ color: '#0f172a' }}>
+                <span className="pa4-info-val font-urdu font-semibold" style={{ color: '#0f172a' }}>
                   {bill.eventVenue.trim() || '—'}
                 </span>
               </div>
 
-              <div className="p57-info-cell" style={{ borderColor: '#cbd5e1', backgroundColor: '#ffffff' }}>
-                <span className="p57-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
+              <div className="pa4-info-row pa4-info-row-last" style={{ backgroundColor: '#ffffff' }}>
+                <span className="pa4-info-label font-urdu font-bold" style={{ color: '#0B1F3A' }}>
                   بل نمبر:
                 </span>
-                <span dir="ltr" className="p57-info-val font-num font-bold" style={{ color: '#0B1F3A' }}>
+                <span dir="ltr" className="pa4-info-val font-num font-bold" style={{ color: '#0B1F3A' }}>
                   {bill.billNumber || '—'}
                 </span>
               </div>
             </div>
 
-            {/* Itemized Tent Rental Table — Every Item Preserved */}
-            <div className="p57-table-wrap">
-              <table className="p57-table border-collapse border" style={{ borderColor: '#94a3b8' }}>
+            {/* Itemized Tent Rental Table */}
+            <div className="pa4-table-wrap">
+              <table className="pa4-table border-collapse border" style={{ borderColor: '#94a3b8' }}>
                 <thead>
                   <tr style={{ backgroundColor: '#0B1F3A', color: '#ffffff' }}>
-                    <th className="p57-th p57-col-idx border font-urdu font-bold text-center" style={{ borderColor: '#1e3a5f' }}>
+                    <th className="pa4-th pa4-col-idx border font-urdu font-bold text-center" style={{ borderColor: '#1e3a5f' }}>
                       نمبر
                     </th>
-                    <th className="p57-th border font-urdu font-bold text-right" style={{ borderColor: '#1e3a5f' }}>
+                    <th className="pa4-th border font-urdu font-bold text-right" style={{ borderColor: '#1e3a5f' }}>
                       سامان کا نام
                     </th>
-                    <th className="p57-th p57-col-qty border font-urdu font-bold text-center" style={{ borderColor: '#1e3a5f' }}>
+                    <th className="pa4-th pa4-col-qty border font-urdu font-bold text-center" style={{ borderColor: '#1e3a5f' }}>
                       تعداد
                     </th>
-                    <th className="p57-th p57-col-rate border font-urdu font-bold text-left" style={{ borderColor: '#1e3a5f' }}>
+                    <th className="pa4-th pa4-col-rate border font-urdu font-bold text-left" style={{ borderColor: '#1e3a5f' }}>
                       فی آئٹم ریٹ
                     </th>
-                    <th className="p57-th p57-col-total border font-urdu font-bold text-left" style={{ borderColor: '#1e3a5f' }}>
+                    <th className="pa4-th pa4-col-total border font-urdu font-bold text-left" style={{ borderColor: '#1e3a5f' }}>
                       کل رقم
                     </th>
                   </tr>
@@ -340,7 +344,7 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
                     <tr>
                       <td
                         colSpan={5}
-                        className="p57-td border text-center font-urdu"
+                        className="pa4-td border text-center font-urdu"
                         style={{ borderColor: '#cbd5e1', color: '#64748b' }}
                       >
                         کوئی سامان درج نہیں کیا گیا
@@ -359,34 +363,34 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
                           }}
                         >
                           <td
-                            className="p57-td border text-center font-num"
+                            className="pa4-td border text-center font-num"
                             style={{ borderColor: '#cbd5e1', color: '#475569' }}
                           >
                             {idx + 1}
                           </td>
                           <td
-                            className="p57-td p57-item-name border font-urdu text-right"
+                            className="pa4-td pa4-item-name border font-urdu text-right"
                             style={{ borderColor: '#cbd5e1', color: '#0f172a' }}
                           >
                             {item.name.trim() || '—'}
                           </td>
                           <td
                             dir="ltr"
-                            className="p57-td border text-center font-num font-semibold"
+                            className="pa4-td border text-center font-num font-semibold"
                             style={{ borderColor: '#cbd5e1', color: '#0f172a' }}
                           >
                             {qtyDisplay}
                           </td>
                           <td
                             dir="ltr"
-                            className="p57-td border text-left font-num"
+                            className="pa4-td border text-left font-num"
                             style={{ borderColor: '#cbd5e1', color: '#0f172a' }}
                           >
                             {formatCurrency(Number(rateDisplay))}
                           </td>
                           <td
                             dir="ltr"
-                            className="p57-td border text-left font-num font-bold"
+                            className="pa4-td border text-left font-num font-bold"
                             style={{ borderColor: '#cbd5e1', color: '#0B1F3A' }}
                           >
                             {formatCurrency(lineTotal)}
@@ -399,12 +403,11 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
               </table>
             </div>
 
-            {/* Totals Breakdown + Thank You / Signature / Official Stamp */}
-            <div className="p57-bottom-row">
-              {/* Totals Box (Right side in RTL) */}
-              <div className="p57-totals-box border rounded" style={{ borderColor: '#94a3b8' }}>
+            {/* Totals Breakdown — Original Right-Aligned Card */}
+            <div className="pa4-totals-wrap">
+              <div className="pa4-totals-box border rounded-md" style={{ borderColor: '#94a3b8' }}>
                 <div
-                  className="p57-total-line border-b"
+                  className="pa4-total-line border-b"
                   style={{ borderColor: '#cbd5e1', backgroundColor: '#f8fafc' }}
                 >
                   <span className="font-urdu font-bold" style={{ color: '#0B1F3A' }}>
@@ -416,7 +419,7 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
                 </div>
 
                 <div
-                  className="p57-total-line border-b"
+                  className="pa4-total-line border-b"
                   style={{ borderColor: '#cbd5e1', backgroundColor: '#ffffff' }}
                 >
                   <span className="font-urdu font-bold" style={{ color: '#0F6B43' }}>
@@ -428,10 +431,10 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
                 </div>
 
                 <div
-                  className="p57-total-line p57-total-balance"
+                  className="pa4-total-line pa4-total-balance"
                   style={{
                     backgroundColor: totals.remainingBalance > 0 ? '#FEF3C7' : '#ECFDF5',
-                    borderTop: '1.5px solid #0B1F3A',
+                    borderTop: '2px solid #0B1F3A',
                   }}
                 >
                   <span
@@ -444,7 +447,7 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
                   </span>
                   <span
                     dir="ltr"
-                    className="font-num font-extrabold"
+                    className="pa4-balance-val font-num font-extrabold"
                     style={{
                       color: totals.remainingBalance > 0 ? '#92400E' : '#065F46',
                     }}
@@ -453,60 +456,72 @@ export const PrintSheet5x7: React.FC<PrintSheet5x7Props> = ({
                   </span>
                 </div>
               </div>
+            </div>
 
-              {/* Signature & Official Green Business Stamp (Left side in RTL) */}
-              <div className="p57-footer-actions">
-                <div className="p57-sign-block">
-                  <p className="p57-thanks font-urdu font-bold" style={{ color: '#0B1F3A' }}>
-                    آپ کے اعتماد کا شکریہ!
-                  </p>
-                  <div className="p57-sign-line-wrap">
-                    <div
-                      className="p57-sign-line border-b border-dashed"
-                      style={{ borderColor: '#64748b' }}
-                    />
-                    <span className="p57-sign-label font-urdu" style={{ color: '#475569' }}>
-                      دستخط / مہر انچارج
-                    </span>
-                  </div>
+            {/* Footer & Official Green Business Stamp — Original Layout */}
+            <div className="pa4-footer-wrap border-t" style={{ borderColor: '#cbd5e1' }}>
+              <div className="pa4-sign-block">
+                <p className="pa4-thanks font-urdu font-bold" style={{ color: '#0B1F3A' }}>
+                  آپ کے اعتماد کا شکریہ!
+                </p>
+                <div className="pa4-sign-line-wrap">
+                  <div
+                    className="pa4-sign-line border-b border-dashed"
+                    style={{ borderColor: '#64748b' }}
+                  />
+                  <span className="pa4-sign-label font-urdu" style={{ color: '#475569' }}>
+                    دستخط / مہر انچارج
+                  </span>
                 </div>
+              </div>
 
-                <div
-                  className="urdu-official-stamp p57-stamp rounded-md text-center"
-                  style={{
-                    borderColor: '#0F6B43',
-                    color: '#0F6B43',
-                    backgroundColor: '#F0FDF4',
-                  }}
-                >
-                  <p className="p57-stamp-title font-urdu font-bold">لجپال ٹینٹ سروس</p>
-                  <p className="p57-stamp-sub font-urdu font-bold">برکت والا</p>
-                  <p className="p57-stamp-phone font-urdu font-semibold">
-                    رابطہ نمبر:{' '}
-                    <span dir="ltr" className="font-num font-bold">
-                      0301-3927492
-                    </span>
-                  </p>
-                </div>
+              <div
+                className="urdu-official-stamp pa4-stamp rounded-lg text-center"
+                style={{
+                  borderColor: '#0F6B43',
+                  color: '#0F6B43',
+                  backgroundColor: '#F0FDF4',
+                }}
+              >
+                <p className="pa4-stamp-title font-urdu font-bold">لجپال ٹینٹ سروس</p>
+                <p className="pa4-stamp-sub font-urdu font-bold">برکت والا</p>
+                <p className="pa4-stamp-phone font-urdu font-semibold">
+                  رابطہ نمبر:{' '}
+                  <span dir="ltr" className="font-num font-bold">
+                    0301-3927492
+                  </span>
+                </p>
               </div>
             </div>
 
-            {/* Complete Rental Terms & Conditions */}
+            {/* Bottom Important Rental Terms & Conditions */}
             <div
               dir="rtl"
-              className="p57-terms rounded border text-right"
+              className="pa4-terms rounded-md border text-right"
               style={{
                 borderColor: '#0B1F3A',
                 backgroundColor: '#f8fafc',
               }}
             >
-              <h3 className="p57-terms-title font-urdu font-bold border-b" style={{ color: '#0B1F3A', borderColor: '#cbd5e1' }}>
+              <h3
+                className="pa4-terms-title font-urdu font-bold border-b"
+                style={{ color: '#0B1F3A', borderColor: '#cbd5e1' }}
+              >
                 ضروری ہدایات و شرائط
               </h3>
-              <ol className="p57-terms-list font-urdu" style={{ color: '#0f172a' }}>
+              <ol className="pa4-terms-list font-urdu" style={{ color: '#0f172a' }}>
                 <li>1. سامان گم یا کم ہونے کی صورت میں کلائنٹ خود ذمہ دار ہوگا۔</li>
                 <li>2. سامان پروگرام ختم ہونے کے فوراً بعد واپس کرنا ہوگا، بصورتِ دیگر اگلے دن کا کرایہ بھی وصول کیا جائے گا۔</li>
               </ol>
+            </div>
+
+            {/* Bottom Footer Text */}
+            <div
+              dir="ltr"
+              className="pa4-bottom-footer font-latin font-extrabold uppercase text-center"
+              style={{ color: '#0B1F3A', borderColor: '#cbd5e1' }}
+            >
+              LAJPAL TENT SERVICE COMPUTRIZED BILLING SYSTEM
             </div>
           </div>
         </div>

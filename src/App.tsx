@@ -14,7 +14,7 @@ import { BillEditor } from './components/BillEditor';
 import { InvoicePreview } from './components/InvoicePreview';
 import { SavedBillsHistory } from './components/SavedBillsHistory';
 import { ConfirmModal } from './components/ConfirmModal';
-import { FitMetrics, PrintSheet5x7, PrintSheet5x7Handle } from './components/PrintSheet5x7';
+import { FitMetrics, PrintSheetA4, PrintSheetA4Handle } from './components/PrintSheetA4';
 import { PrintInstructionsModal } from './components/PrintInstructionsModal';
 
 export default function App() {
@@ -23,7 +23,7 @@ export default function App() {
     createBlankBill(loadBillsFromStorage())
   );
   const [activeTab, setActiveTab] = useState<ActiveTab>('editor');
-  const paperSize: PaperSize = '5x7';
+  const paperSize: PaperSize = 'a4';
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{
     type: 'success' | 'error';
@@ -36,11 +36,11 @@ export default function App() {
 
   const invoiceRef = useRef<HTMLDivElement | null>(null);
   const printSheetRef = useRef<HTMLDivElement | null>(null);
-  const printControllerRef = useRef<PrintSheet5x7Handle | null>(null);
+  const printControllerRef = useRef<PrintSheetA4Handle | null>(null);
 
   const isEditingSaved = savedBills.some((b) => b.id === currentBill.id);
 
-  // Sync @page CSS rule for exact 5in x 7in portrait single-page physical printing
+  // Sync @page CSS rule for exact A4 (210 x 297 mm) portrait single-page physical printing
   useEffect(() => {
     const styleId = 'dynamic-print-page-style';
     let styleEl = document.getElementById(styleId) as HTMLStyleElement | null;
@@ -49,7 +49,7 @@ export default function App() {
       styleEl.id = styleId;
       document.head.appendChild(styleEl);
     }
-    styleEl.textContent = '@page { size: 5in 7in; margin: 0; }';
+    styleEl.textContent = '@page { size: A4 portrait; margin: 0; }';
   }, []);
 
   // Preload Jameel Noori Nastaleeq font as soon as the app mounts
@@ -185,7 +185,7 @@ export default function App() {
       await downloadInvoicePdf(target, currentBill.billNumber, paperSize);
       setStatusMessage({
         type: 'success',
-        text: `بل نمبر ${currentBill.billNumber} کی 5×7 انچ PDF کامیابی سے ڈاؤن لوڈ ہو گئی۔`,
+        text: `بل نمبر ${currentBill.billNumber} کی A4 PDF کامیابی سے ڈاؤن لوڈ ہو گئی۔`,
       });
     } catch {
       setStatusMessage({
@@ -240,7 +240,7 @@ export default function App() {
           await downloadInvoicePdf(target, bill.billNumber, paperSize);
           setStatusMessage({
             type: 'success',
-            text: `بل نمبر ${bill.billNumber} کی 5×7 انچ PDF کامیابی سے ڈاؤن لوڈ ہو گئی۔`,
+            text: `بل نمبر ${bill.billNumber} کی A4 PDF کامیابی سے ڈاؤن لوڈ ہو گئی۔`,
           });
         } catch {
           setStatusMessage({
@@ -310,7 +310,7 @@ export default function App() {
                     اصل بل کا لائیو پیش نظارہ
                   </span>
                   <span className="rounded bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-xs font-semibold text-[#0F6B43]">
-                    <span dir="ltr" className="font-num font-bold">5 × 7 in</span>{' '}
+                    <span dir="ltr" className="font-latin font-bold">A4</span>{' '}
                     <span className="font-urdu">
                       · 1 صفحہ ({Math.round(fitMetrics.scale * 100)}%)
                     </span>
@@ -357,8 +357,8 @@ export default function App() {
         )}
       </main>
 
-      {/* Dedicated Fitted 5x7 Inch Single-Page Print & PDF Sheet */}
-      <PrintSheet5x7
+      {/* Dedicated Fitted A4 (210 x 297 mm) Single-Page Print & PDF Sheet */}
+      <PrintSheetA4
         bill={currentBill}
         sheetRef={printSheetRef}
         controllerRef={printControllerRef}

@@ -161,9 +161,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
           >
             کمپیوٹرائزڈ کرایہ بل / انوائس
           </span>
-          <span className="font-urdu text-xs sm:text-sm" style={{ color: '#475569' }}>
-            کاغذ کا سائز: <span dir="ltr" className="font-num font-bold">5 × 7</span> انچ
-          </span>
         </div>
       </div>
 
@@ -529,6 +526,15 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
           <li>1. سامان گم یا کم ہونے کی صورت میں کلائنٹ خود ذمہ دار ہوگا۔</li>
           <li>2. سامان پروگرام ختم ہونے کے فوراً بعد واپس کرنا ہوگا، بصورتِ دیگر اگلے دن کا کرایہ بھی وصول کیا جائے گا۔</li>
         </ol>
+      </div>
+
+      {/* Bottom Footer Text */}
+      <div
+        dir="ltr"
+        className="mt-4 border-t pt-2.5 text-center font-latin text-xs sm:text-sm font-extrabold tracking-wider uppercase"
+        style={{ color: '#0B1F3A', borderColor: '#cbd5e1' }}
+      >
+        LAJPAL TENT SERVICE COMPUTRIZED BILLING SYSTEM
       </div>
     </div>
   );

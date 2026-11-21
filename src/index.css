@@ -85,24 +85,24 @@ input[type='number'] {
 }
 
 /* =========================================================
-   5 x 7 INCH PRINT SHEET LAYOUT & 4-TIER ADAPTIVE DENSITY
+   A4 (210mm x 297mm) PRINT SHEET & 4-TIER ADAPTIVE DENSITY
    ========================================================= */
-.print-5x7-wrapper {
+.print-a4-wrapper {
   position: fixed;
   left: -10000px;
   top: 0;
-  width: 4.98in;
-  height: 6.96in;
+  width: 209mm;
+  height: 295.5mm;
   overflow: hidden;
   pointer-events: none;
   z-index: -1;
 }
 
-.p57-sheet {
-  width: 4.98in;
-  height: 6.96in;
+.pa4-sheet {
+  width: 209mm;
+  height: 295.5mm;
   box-sizing: border-box;
-  padding: 0.13in 0.15in;
+  padding: 8mm 9mm;
   background: #ffffff;
   color: #0f172a;
   overflow: hidden;
@@ -110,14 +110,14 @@ input[type='number'] {
   font-family: var(--font-urdu);
 }
 
-.p57-viewport {
+.pa4-viewport {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
-.p57-content {
+.pa4-content {
   position: absolute;
   top: 0;
   left: 0;
@@ -125,252 +125,263 @@ input[type='number'] {
   direction: rtl;
 }
 
-/* Tier 0: Comfortable (default for short/medium bills) */
-.p57-content[data-tier='0'] {
-  --p57-banner-pad: 6px 9px;
-  --p57-photo-h: 46px;
-  --p57-photo-gap: 6px;
-  --p57-en-size: 12px;
-  --p57-ur-title-size: 16.5px;
-  --p57-desc-size: 10px;
-  --p57-contact-size: 9.5px;
-  --p57-wa-size: 12px;
-  --p57-subhead-size: 11.5px;
-  --p57-paper-size: 9.5px;
-  --p57-info-size: 10.5px;
-  --p57-info-py: 2.5px;
-  --p57-info-px: 6px;
-  --p57-table-size: 10.5px;
-  --p57-cell-py: 3px;
-  --p57-cell-px: 5px;
-  --p57-sec-gap: 6px;
-  --p57-urdu-lh: 1.62;
-  --p57-totals-size: 10.5px;
-  --p57-totals-py: 2.5px;
-  --p57-thanks-size: 12px;
-  --p57-stamp-pad: 4px 10px;
-  --p57-stamp-title: 11.5px;
-  --p57-stamp-sub: 10px;
-  --p57-stamp-phone: 9px;
-  --p57-terms-pad: 4px 7px;
-  --p57-terms-title: 10.5px;
-  --p57-terms-size: 9.5px;
+/* Tier 0: Original A4 Proportions (fits ~1-14 items at 100% scale) */
+.pa4-content[data-tier='0'] {
+  --pa4-sys-size: 12.5px;
+  --pa4-sys-py: 4px;
+  --pa4-banner-pad: 10px 16px;
+  --pa4-photo-h: 82px;
+  --pa4-photo-gap: 12px;
+  --pa4-en-size: 17.5px;
+  --pa4-ur-title-size: 25px;
+  --pa4-desc-size: 13.5px;
+  --pa4-contact-size: 12.5px;
+  --pa4-wa-size: 16px;
+  --pa4-subhead-size: 15.5px;
+  --pa4-paper-size: 12px;
+  --pa4-info-size: 13.5px;
+  --pa4-info-py: 5px;
+  --pa4-info-px: 12px;
+  --pa4-table-size: 13.5px;
+  --pa4-cell-py: 5px;
+  --pa4-cell-px: 10px;
+  --pa4-sec-gap: 11px;
+  --pa4-urdu-lh: 1.72;
+  --pa4-totals-w: 295px;
+  --pa4-totals-size: 13.5px;
+  --pa4-totals-py: 6px;
+  --pa4-balance-size: 15.5px;
+  --pa4-thanks-size: 16.5px;
+  --pa4-stamp-pad: 7px 16px;
+  --pa4-stamp-title: 14.5px;
+  --pa4-stamp-sub: 12.5px;
+  --pa4-stamp-phone: 11px;
+  --pa4-terms-pad: 8px 13px;
+  --pa4-terms-title: 14.5px;
+  --pa4-terms-size: 13px;
 }
 
-/* Tier 1: Compact */
-.p57-content[data-tier='1'] {
-  --p57-banner-pad: 5px 8px;
-  --p57-photo-h: 34px;
-  --p57-photo-gap: 5px;
-  --p57-en-size: 11px;
-  --p57-ur-title-size: 14.5px;
-  --p57-desc-size: 9px;
-  --p57-contact-size: 8.5px;
-  --p57-wa-size: 11px;
-  --p57-subhead-size: 10.5px;
-  --p57-paper-size: 8.5px;
-  --p57-info-size: 9.5px;
-  --p57-info-py: 2px;
-  --p57-info-px: 5px;
-  --p57-table-size: 9.5px;
-  --p57-cell-py: 2px;
-  --p57-cell-px: 4.5px;
-  --p57-sec-gap: 4.5px;
-  --p57-urdu-lh: 1.54;
-  --p57-totals-size: 9.5px;
-  --p57-totals-py: 2px;
-  --p57-thanks-size: 11px;
-  --p57-stamp-pad: 3px 8px;
-  --p57-stamp-title: 10.5px;
-  --p57-stamp-sub: 9px;
-  --p57-stamp-phone: 8.5px;
-  --p57-terms-pad: 3.5px 6px;
-  --p57-terms-title: 9.5px;
-  --p57-terms-size: 8.8px;
+/* Tier 1: Compact A4 (fits ~15-24 items at 100% scale) */
+.pa4-content[data-tier='1'] {
+  --pa4-sys-size: 11.5px;
+  --pa4-sys-py: 3px;
+  --pa4-banner-pad: 8px 14px;
+  --pa4-photo-h: 62px;
+  --pa4-photo-gap: 10px;
+  --pa4-en-size: 15.5px;
+  --pa4-ur-title-size: 21px;
+  --pa4-desc-size: 12px;
+  --pa4-contact-size: 11.5px;
+  --pa4-wa-size: 14.5px;
+  --pa4-subhead-size: 14px;
+  --pa4-paper-size: 11px;
+  --pa4-info-size: 12.5px;
+  --pa4-info-py: 3.5px;
+  --pa4-info-px: 10px;
+  --pa4-table-size: 12px;
+  --pa4-cell-py: 3.5px;
+  --pa4-cell-px: 8px;
+  --pa4-sec-gap: 9px;
+  --pa4-urdu-lh: 1.6;
+  --pa4-totals-w: 270px;
+  --pa4-totals-size: 12.5px;
+  --pa4-totals-py: 4.5px;
+  --pa4-balance-size: 14px;
+  --pa4-thanks-size: 15px;
+  --pa4-stamp-pad: 6px 14px;
+  --pa4-stamp-title: 13.5px;
+  --pa4-stamp-sub: 12px;
+  --pa4-stamp-phone: 10.5px;
+  --pa4-terms-pad: 7px 12px;
+  --pa4-terms-title: 13px;
+  --pa4-terms-size: 11.8px;
 }
 
-/* Tier 2: Dense */
-.p57-content[data-tier='2'] {
-  --p57-banner-pad: 4px 7px;
-  --p57-photo-h: 26px;
-  --p57-photo-gap: 4px;
-  --p57-en-size: 10px;
-  --p57-ur-title-size: 13px;
-  --p57-desc-size: 8.2px;
-  --p57-contact-size: 8px;
-  --p57-wa-size: 10px;
-  --p57-subhead-size: 9.5px;
-  --p57-paper-size: 8px;
-  --p57-info-size: 8.8px;
-  --p57-info-py: 1.5px;
-  --p57-info-px: 4px;
-  --p57-table-size: 8.8px;
-  --p57-cell-py: 1.5px;
-  --p57-cell-px: 4px;
-  --p57-sec-gap: 3.5px;
-  --p57-urdu-lh: 1.48;
-  --p57-totals-size: 8.8px;
-  --p57-totals-py: 1.5px;
-  --p57-thanks-size: 10px;
-  --p57-stamp-pad: 2.5px 7px;
-  --p57-stamp-title: 9.5px;
-  --p57-stamp-sub: 8.5px;
-  --p57-stamp-phone: 8px;
-  --p57-terms-pad: 3px 5px;
-  --p57-terms-title: 9px;
-  --p57-terms-size: 8.2px;
+/* Tier 2: Dense A4 (fits ~25-36 items at 100% scale) */
+.pa4-content[data-tier='2'] {
+  --pa4-sys-size: 10.5px;
+  --pa4-sys-py: 2.5px;
+  --pa4-banner-pad: 7px 12px;
+  --pa4-photo-h: 46px;
+  --pa4-photo-gap: 8px;
+  --pa4-en-size: 14px;
+  --pa4-ur-title-size: 19px;
+  --pa4-desc-size: 11px;
+  --pa4-contact-size: 10.5px;
+  --pa4-wa-size: 13px;
+  --pa4-subhead-size: 13px;
+  --pa4-paper-size: 10.5px;
+  --pa4-info-size: 11px;
+  --pa4-info-py: 2.5px;
+  --pa4-info-px: 8px;
+  --pa4-table-size: 10.8px;
+  --pa4-cell-py: 2.5px;
+  --pa4-cell-px: 7px;
+  --pa4-sec-gap: 7px;
+  --pa4-urdu-lh: 1.5;
+  --pa4-totals-w: 245px;
+  --pa4-totals-size: 11px;
+  --pa4-totals-py: 3.5px;
+  --pa4-balance-size: 12.5px;
+  --pa4-thanks-size: 13.5px;
+  --pa4-stamp-pad: 5px 12px;
+  --pa4-stamp-title: 12px;
+  --pa4-stamp-sub: 10.5px;
+  --pa4-stamp-phone: 9.5px;
+  --pa4-terms-pad: 5px 10px;
+  --pa4-terms-title: 11.5px;
+  --pa4-terms-size: 10.5px;
 }
 
-/* Tier 3: Ultra-Dense (used before & with dynamic scale-to-fit) */
-.p57-content[data-tier='3'] {
-  --p57-banner-pad: 3px 6px;
-  --p57-photo-h: 22px;
-  --p57-photo-gap: 3px;
-  --p57-en-size: 9.5px;
-  --p57-ur-title-size: 12px;
-  --p57-desc-size: 7.8px;
-  --p57-contact-size: 7.6px;
-  --p57-wa-size: 9.5px;
-  --p57-subhead-size: 9px;
-  --p57-paper-size: 7.6px;
-  --p57-info-size: 8.4px;
-  --p57-info-py: 1px;
-  --p57-info-px: 4px;
-  --p57-table-size: 8.4px;
-  --p57-cell-py: 1px;
-  --p57-cell-px: 3.5px;
-  --p57-sec-gap: 2.5px;
-  --p57-urdu-lh: 1.44;
-  --p57-totals-size: 8.4px;
-  --p57-totals-py: 1px;
-  --p57-thanks-size: 9.5px;
-  --p57-stamp-pad: 2px 6px;
-  --p57-stamp-title: 9px;
-  --p57-stamp-sub: 8px;
-  --p57-stamp-phone: 7.5px;
-  --p57-terms-pad: 2.5px 5px;
-  --p57-terms-title: 8.5px;
-  --p57-terms-size: 7.8px;
+/* Tier 3: Ultra-Dense A4 (used before & with proportional scale-to-fit) */
+.pa4-content[data-tier='3'] {
+  --pa4-sys-size: 9.5px;
+  --pa4-sys-py: 2px;
+  --pa4-banner-pad: 5px 10px;
+  --pa4-photo-h: 34px;
+  --pa4-photo-gap: 6px;
+  --pa4-en-size: 12.5px;
+  --pa4-ur-title-size: 17px;
+  --pa4-desc-size: 10px;
+  --pa4-contact-size: 9.5px;
+  --pa4-wa-size: 12px;
+  --pa4-subhead-size: 11.5px;
+  --pa4-paper-size: 9.5px;
+  --pa4-info-size: 10px;
+  --pa4-info-py: 1.5px;
+  --pa4-info-px: 7px;
+  --pa4-table-size: 9.8px;
+  --pa4-cell-py: 1.5px;
+  --pa4-cell-px: 6px;
+  --pa4-sec-gap: 5px;
+  --pa4-urdu-lh: 1.44;
+  --pa4-totals-w: 225px;
+  --pa4-totals-size: 10px;
+  --pa4-totals-py: 2.5px;
+  --pa4-balance-size: 11.5px;
+  --pa4-thanks-size: 12px;
+  --pa4-stamp-pad: 4px 10px;
+  --pa4-stamp-title: 11px;
+  --pa4-stamp-sub: 9.5px;
+  --pa4-stamp-phone: 9px;
+  --pa4-terms-pad: 4px 8px;
+  --pa4-terms-title: 10.5px;
+  --pa4-terms-size: 9.5px;
 }
 
-.p57-content .font-urdu {
-  line-height: var(--p57-urdu-lh);
+.pa4-content .font-urdu {
+  line-height: var(--pa4-urdu-lh);
 }
 
-.p57-header-wrap {
-  border-bottom: 1.5px solid #0B1F3A;
-  padding-bottom: 3px;
-  margin-bottom: var(--p57-sec-gap);
+.pa4-header-wrap {
+  border-bottom: 2px solid #0B1F3A;
+  padding-bottom: 6px;
+  margin-bottom: var(--pa4-sec-gap);
 }
 
-.p57-banner {
-  border-radius: 5px;
+.pa4-banner {
+  border-radius: 6px;
   text-align: center;
-  padding: var(--p57-banner-pad);
+  padding: var(--pa4-banner-pad);
 }
 
-.p57-photos-grid {
+.pa4-photos-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--p57-photo-gap);
-  margin-bottom: 3px;
+  gap: var(--pa4-photo-gap);
+  margin-bottom: 6px;
 }
 
-.p57-photo-box {
-  height: var(--p57-photo-h);
-  border-radius: 3px;
+.pa4-photo-box {
+  height: var(--pa4-photo-h);
+  border-radius: 4px;
   border: 1px solid #C89B3C;
   background-color: #071529;
   overflow: hidden;
 }
 
-.p57-en-title {
-  font-size: var(--p57-en-size);
-  line-height: 1.2;
-  letter-spacing: 0.03em;
+.pa4-en-title {
+  font-size: var(--pa4-en-size);
+  line-height: 1.25;
+  letter-spacing: 0.04em;
 }
 
-.p57-ur-title {
-  font-size: var(--p57-ur-title-size);
-  line-height: 1.45;
-  margin-top: 1px;
-}
-
-.p57-desc {
-  font-size: var(--p57-desc-size);
-  line-height: var(--p57-urdu-lh);
-  margin-top: 1px;
-}
-
-.p57-contacts {
+.pa4-ur-title {
+  font-size: var(--pa4-ur-title-size);
+  line-height: 1.55;
   margin-top: 2px;
-  padding-top: 2px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.pa4-desc {
+  font-size: var(--pa4-desc-size);
+  line-height: var(--pa4-urdu-lh);
+  margin-top: 2px;
+}
+
+.pa4-contacts {
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 2px 12px;
-  font-size: var(--p57-contact-size);
-  line-height: 1.3;
+  gap: 4px 20px;
+  font-size: var(--pa4-contact-size);
+  line-height: 1.35;
 }
 
-.p57-wa-icon {
-  width: var(--p57-wa-size);
-  height: var(--p57-wa-size);
+.pa4-wa-icon {
+  width: var(--pa4-wa-size);
+  height: var(--pa4-wa-size);
 }
 
-.p57-subhead-bar {
-  margin-top: 3px;
+.pa4-subhead-bar {
+  margin-top: 5px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
-.p57-subhead-title {
-  font-size: var(--p57-subhead-size);
+.pa4-subhead-title {
+  font-size: var(--pa4-subhead-size);
 }
 
-.p57-paper-label {
-  font-size: var(--p57-paper-size);
+.pa4-paper-label {
+  font-size: var(--pa4-paper-size);
 }
 
-.p57-info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.pa4-info-list {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #cbd5e1;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
-  margin-bottom: var(--p57-sec-gap);
-  font-size: var(--p57-info-size);
+  margin-bottom: var(--pa4-sec-gap);
+  font-size: var(--pa4-info-size);
 }
 
-.p57-info-cell {
+.pa4-info-row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 5px;
-  padding: var(--p57-info-py) var(--p57-info-px);
+  gap: 16px;
+  padding: var(--pa4-info-py) var(--pa4-info-px);
   border-bottom: 1px solid #cbd5e1;
-  border-left: 1px solid #cbd5e1;
   min-width: 0;
 }
 
-.p57-info-cell:nth-child(even) {
-  border-left: none;
-}
-
-.p57-info-cell:nth-last-child(-n + 2) {
+.pa4-info-row-last {
   border-bottom: none;
 }
 
-.p57-info-label {
+.pa4-info-label {
   flex-shrink: 0;
   white-space: nowrap;
 }
 
-.p57-info-val {
+.pa4-info-val {
   text-align: left;
   white-space: normal;
   word-break: break-word;
@@ -378,145 +389,156 @@ input[type='number'] {
   min-width: 0;
 }
 
-.p57-table-wrap {
-  margin-bottom: var(--p57-sec-gap);
+.pa4-table-wrap {
+  margin-bottom: var(--pa4-sec-gap);
 }
 
-.p57-table {
+.pa4-table {
   width: 100%;
   table-layout: fixed;
-  font-size: var(--p57-table-size);
+  font-size: var(--pa4-table-size);
 }
 
-.p57-th,
-.p57-td {
-  padding: var(--p57-cell-py) var(--p57-cell-px);
+.pa4-th,
+.pa4-td {
+  padding: var(--pa4-cell-py) var(--pa4-cell-px);
   vertical-align: middle;
 }
 
-.p57-col-idx {
-  width: 28px;
+.pa4-col-idx {
+  width: 44px;
 }
 
-.p57-col-qty {
-  width: 40px;
+.pa4-col-qty {
+  width: 68px;
 }
 
-.p57-col-rate {
-  width: 66px;
+.pa4-col-rate {
+  width: 105px;
 }
 
-.p57-col-total {
-  width: 72px;
+.pa4-col-total {
+  width: 118px;
 }
 
-.p57-item-name {
+.pa4-item-name {
   white-space: normal;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
 
-.p57-bottom-row {
+.pa4-totals-wrap {
   display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: var(--p57-sec-gap);
+  justify-content: flex-end;
+  margin-bottom: var(--pa4-sec-gap);
 }
 
-.p57-totals-box {
-  width: 47%;
-  flex-shrink: 0;
+.pa4-totals-box {
+  width: 100%;
+  max-width: var(--pa4-totals-w);
   overflow: hidden;
-  font-size: var(--p57-totals-size);
+  font-size: var(--pa4-totals-size);
 }
 
-.p57-total-line {
+.pa4-total-line {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
-  padding: var(--p57-totals-py) 6px;
+  gap: 8px;
+  padding: var(--pa4-totals-py) 10px;
 }
 
-.p57-footer-actions {
-  flex: 1;
+.pa4-balance-val {
+  font-size: var(--pa4-balance-size);
+}
+
+.pa4-footer-wrap {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 6px;
-  min-width: 0;
+  gap: 12px;
+  padding-top: 8px;
+  margin-bottom: var(--pa4-sec-gap);
 }
 
-.p57-sign-block {
+.pa4-sign-block {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 6px;
+  gap: 8px;
 }
 
-.p57-thanks {
-  font-size: var(--p57-thanks-size);
+.pa4-thanks {
+  font-size: var(--pa4-thanks-size);
 }
 
-.p57-sign-line-wrap {
+.pa4-sign-line-wrap {
   padding-top: 6px;
 }
 
-.p57-sign-line {
-  width: 82px;
-  margin-bottom: 1px;
-}
-
-.p57-sign-label {
-  font-size: var(--p57-paper-size);
-}
-
-.p57-stamp {
-  padding: var(--p57-stamp-pad);
-  flex-shrink: 0;
-}
-
-.p57-stamp-title {
-  font-size: var(--p57-stamp-title);
-  line-height: 1.4;
-}
-
-.p57-stamp-sub {
-  font-size: var(--p57-stamp-sub);
-  line-height: 1.35;
-}
-
-.p57-stamp-phone {
-  font-size: var(--p57-stamp-phone);
-  line-height: 1.3;
-  margin-top: 1px;
-}
-
-.p57-terms {
-  padding: var(--p57-terms-pad);
-}
-
-.p57-terms-title {
-  font-size: var(--p57-terms-title);
-  padding-bottom: 1px;
+.pa4-sign-line {
+  width: 140px;
   margin-bottom: 2px;
 }
 
-.p57-terms-list {
-  font-size: var(--p57-terms-size);
-  line-height: var(--p57-urdu-lh);
+.pa4-sign-label {
+  font-size: var(--pa4-paper-size);
+}
+
+.pa4-stamp {
+  padding: var(--pa4-stamp-pad);
+  flex-shrink: 0;
+}
+
+.pa4-stamp-title {
+  font-size: var(--pa4-stamp-title);
+  line-height: 1.5;
+}
+
+.pa4-stamp-sub {
+  font-size: var(--pa4-stamp-sub);
+  line-height: 1.45;
+}
+
+.pa4-stamp-phone {
+  font-size: var(--pa4-stamp-phone);
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+.pa4-terms {
+  padding: var(--pa4-terms-pad);
+}
+
+.pa4-terms-title {
+  font-size: var(--pa4-terms-title);
+  padding-bottom: 3px;
+  margin-bottom: 4px;
+}
+
+.pa4-terms-list {
+  font-size: var(--pa4-terms-size);
+  line-height: var(--pa4-urdu-lh);
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
+}
+
+.pa4-bottom-footer {
+  margin-top: var(--pa4-sec-gap);
+  padding-top: calc(var(--pa4-sys-py) + 2px);
+  border-top: 1px solid #cbd5e1;
+  font-size: var(--pa4-sys-size);
+  line-height: 1.25;
+  letter-spacing: 0.06em;
 }
 
 /* =========================================================
-   PRINT ENGINE — Prints ONLY #printable-5x7-sheet on ONE
-   exact 5in x 7in (portrait) page with ZERO 2nd/blank page
+   PRINT ENGINE — Prints ONLY #printable-a4-sheet on ONE
+   exact A4 (210mm x 297mm, Portrait) page with ZERO 2nd page
    ========================================================= */
 @page {
-  size: 5in 7in;
+  size: A4 portrait;
   margin: 0;
 }
 
@@ -531,9 +553,9 @@ input[type='number'] {
     background: #ffffff !important;
     margin: 0 !important;
     padding: 0 !important;
-    width: 5in !important;
-    height: 6.96in !important;
-    max-height: 6.96in !important;
+    width: 210mm !important;
+    height: 295.5mm !important;
+    max-height: 295.5mm !important;
     min-height: 0 !important;
     overflow: hidden !important;
     direction: rtl !important;
@@ -547,9 +569,9 @@ input[type='number'] {
 
   .print-app-shell {
     display: block !important;
-    width: 5in !important;
-    height: 6.96in !important;
-    max-height: 6.96in !important;
+    width: 210mm !important;
+    height: 295.5mm !important;
+    max-height: 295.5mm !important;
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -557,7 +579,7 @@ input[type='number'] {
     background: #ffffff !important;
   }
 
-  .print-5x7-wrapper {
+  .print-a4-wrapper {
     position: static !important;
     left: auto !important;
     top: auto !important;
@@ -566,9 +588,9 @@ input[type='number'] {
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    width: 5in !important;
-    height: 6.96in !important;
-    max-height: 6.96in !important;
+    width: 210mm !important;
+    height: 295.5mm !important;
+    max-height: 295.5mm !important;
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
@@ -579,10 +601,10 @@ input[type='number'] {
     break-inside: avoid !important;
   }
 
-  #printable-5x7-sheet {
-    width: 4.98in !important;
-    height: 6.96in !important;
-    max-height: 6.96in !important;
+  #printable-a4-sheet {
+    width: 209mm !important;
+    height: 295.5mm !important;
+    max-height: 295.5mm !important;
     margin: 0 !important;
     overflow: hidden !important;
     box-shadow: none !important;

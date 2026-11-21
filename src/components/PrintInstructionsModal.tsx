@@ -26,7 +26,7 @@ export const PrintInstructionsModal: React.FC<PrintInstructionsModalProps> = ({
           <div className="flex items-center gap-2.5">
             <Printer className="h-5 w-5 shrink-0 text-[#0B1F3A]" aria-hidden="true" />
             <h2 id="print-guide-title" className="font-urdu text-xl font-bold text-[#0B1F3A]">
-              5 × 7 انچ پرنٹر سیٹنگز کی ہدایات
+              A4 پرنٹر سیٹنگز کی ہدایات
             </h2>
           </div>
           <button
@@ -41,7 +41,7 @@ export const PrintInstructionsModal: React.FC<PrintInstructionsModalProps> = ({
 
         <div className="mt-4 space-y-3 font-urdu text-sm sm:text-base text-slate-700">
           <p className="font-semibold text-slate-900">
-            بل ہمیشہ خودکار طریقے سے ایک صفحے (<span dir="ltr" className="font-num font-bold">5 × 7 in</span>) پر فٹ ہو کر پرنٹ ہوتا ہے۔ پرنٹ ڈائیلاگ میں یہ سیٹنگز منتخب کریں:
+            بل ہمیشہ خودکار طریقے سے ایک صفحے (<span dir="ltr" className="font-latin font-bold">A4 · 210 × 297 mm</span>) پر فٹ ہو کر پرنٹ ہوتا ہے۔ پرنٹ ڈائیلاگ میں یہ سیٹنگز منتخب کریں:
           </p>
 
           <ul className="space-y-2.5 rounded-lg border border-slate-200 bg-slate-50 p-4">
@@ -50,9 +50,7 @@ export const PrintInstructionsModal: React.FC<PrintInstructionsModalProps> = ({
               <span>
                 <strong>کاغذ کا سائز (<span dir="ltr" className="font-latin">Paper size</span>):</strong>{' '}
                 پرنٹ ونڈو میں <span dir="ltr" className="font-latin font-bold">More settings</span> کھولیں اور{' '}
-                <span dir="ltr" className="font-num font-bold">5 × 7 in</span> (یا{' '}
-                <span dir="ltr" className="font-num font-bold">127 × 178 mm</span> /{' '}
-                <span dir="ltr" className="font-latin font-bold">Custom 5×7</span>) منتخب کریں۔
+                <span dir="ltr" className="font-latin font-bold">A4 (210 × 297 mm)</span> منتخب کریں۔
               </span>
             </li>
             <li className="flex items-start gap-2">

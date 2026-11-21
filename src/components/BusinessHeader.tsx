@@ -150,15 +150,15 @@ export const BusinessHeader: React.FC<BusinessHeaderProps> = ({
             </button>
           </nav>
 
-          {/* Single Custom 5x7 Inch Paper Format Indicator & Printer Guide */}
+          {/* Single A4 (210 x 297 mm) Paper Format Indicator & Printer Guide */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-slate-300 font-urdu whitespace-nowrap">
               <Printer className="h-4 w-4 text-[#C89B3C]" aria-hidden="true" />
               پرنٹ سائز:
             </span>
             <div className="inline-flex items-center gap-2 rounded-lg bg-[#071529] px-3 py-1.5 border border-white/15">
-              <span dir="ltr" className="font-num text-xs sm:text-sm font-bold text-[#F5D076]">
-                5 × 7 in
+              <span dir="ltr" className="font-latin text-xs sm:text-sm font-bold text-[#F5D076]">
+                A4 (210 × 297 mm)
               </span>
               <span className="font-urdu text-xs sm:text-sm font-semibold text-white">
                 (مکمل بل — 1 صفحہ)
