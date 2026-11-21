@@ -1,0 +1,8 @@
+{
+  "name": "Remix Lajpal Tent Service Barkat Wala - Urdu Billing",
+  "description": "Complete Urdu billing and computerized invoice management system for Lajpal Tent Service Barkat Wala with A4/Half-A4 print, PDF export, and localStorage bill history.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

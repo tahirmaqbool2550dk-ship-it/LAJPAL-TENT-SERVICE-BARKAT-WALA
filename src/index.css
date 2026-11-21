@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+/* Licensed Jameel Noori Nastaleeq webfont with local system font priority + CORS-enabled WOFF2 CDN */
+@font-face {
+  font-family: 'Jameel Noori Nastaleeq';
+  src:
+    local('Jameel Noori Nastaleeq'),
+    local('JameelNooriNastaleeq'),
+    url('https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/fonts/jameel-noori-nastaleeq4.woff2') format('woff2'),
+    url('https://unpkg.com/jameel-noori@1.1.2/fonts/jameel-noori-nastaleeq4.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Jameel Noori Nastaleeq';
+  src:
+    local('Jameel Noori Nastaleeq'),
+    local('JameelNooriNastaleeq'),
+    url('https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/fonts/jameel-noori-nastaleeq4.woff2') format('woff2'),
+    url('https://unpkg.com/jameel-noori@1.1.2/fonts/jameel-noori-nastaleeq4.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-urdu: 'Jameel Noori Nastaleeq', 'JameelNooriNastaliq', 'Noto Nastaliq Urdu', serif;
+  --font-latin: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-num: 'JetBrains Mono', 'Plus Jakarta Sans', monospace;
+  --brand-navy: #0B1F3A;
+  --brand-green: #0F6B43;
+  --brand-gold: #C89B3C;
+}
+
+html,
+body {
+  font-family: var(--font-urdu);
+  direction: rtl;
+  line-height: 1.95;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-urdu {
+  font-family: var(--font-urdu);
+  line-height: 1.95;
+}
+
+.font-latin {
+  font-family: var(--font-latin);
+  line-height: 1.35;
+}
+
+.font-num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+/* Prevent Nastaleeq ascenders/descenders from clipping inside inputs/buttons */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Official Ink Stamp Effect */
+.urdu-official-stamp {
+  border: 2.5px solid #0F6B43;
+  color: #0F6B43;
+  box-shadow: inset 0 0 0 1.5px #0F6B43;
+}
+
+/* =========================================================
+   PRINT ENGINE — Prints ONLY #printable-invoice cleanly
+   Supports A4 (210mm x 297mm) and Half-A4 / A5 (148mm x 210mm)
+   ========================================================= */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    direction: rtl !important;
+    font-family: var(--font-urdu) !important;
+  }
+
+  /* Hide every non-invoice element in the application */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reset outer app shell and grid containers so invoice uses 100% page width */
+  .print-app-shell,
+  .print-main,
+  .print-editor-grid {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  /* Ensure the print wrapper spans full printable area without scrollbars or shadows */
+  .print-only-container {
+    display: block !important;
+    position: static !important;
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+  }
+
+  #printable-invoice {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  #printable-invoice.paper-half-a4 {
+    font-size: 12px !important;
+  }
+}
