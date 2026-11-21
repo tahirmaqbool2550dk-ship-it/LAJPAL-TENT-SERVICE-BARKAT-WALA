@@ -1,4 +1,4 @@
-export type PaperSize = 'a4' | 'half-a4';
+export type PaperSize = '5x7';
 
 export type ActiveTab = 'editor' | 'history';
 

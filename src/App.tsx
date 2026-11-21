@@ -14,6 +14,8 @@ import { BillEditor } from './components/BillEditor';
 import { InvoicePreview } from './components/InvoicePreview';
 import { SavedBillsHistory } from './components/SavedBillsHistory';
 import { ConfirmModal } from './components/ConfirmModal';
+import { FitMetrics, PrintSheet5x7, PrintSheet5x7Handle } from './components/PrintSheet5x7';
+import { PrintInstructionsModal } from './components/PrintInstructionsModal';
 
 export default function App() {
   const [savedBills, setSavedBills] = useState<Bill[]>(() => loadBillsFromStorage());
@@ -21,7 +23,7 @@ export default function App() {
     createBlankBill(loadBillsFromStorage())
   );
   const [activeTab, setActiveTab] = useState<ActiveTab>('editor');
-  const [paperSize, setPaperSize] = useState<PaperSize>('a4');
+  const paperSize: PaperSize = '5x7';
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{
     type: 'success' | 'error';
@@ -29,12 +31,16 @@ export default function App() {
   } | null>(null);
   const [printBlockedHint, setPrintBlockedHint] = useState(false);
   const [billToDelete, setBillToDelete] = useState<Bill | null>(null);
+  const [showPrintGuide, setShowPrintGuide] = useState(false);
+  const [fitMetrics, setFitMetrics] = useState<FitMetrics>({ tier: 0, scale: 1 });
 
   const invoiceRef = useRef<HTMLDivElement | null>(null);
+  const printSheetRef = useRef<HTMLDivElement | null>(null);
+  const printControllerRef = useRef<PrintSheet5x7Handle | null>(null);
 
   const isEditingSaved = savedBills.some((b) => b.id === currentBill.id);
 
-  // Sync dynamic @page CSS rule for A4 vs Half-A4 (A5) physical printing
+  // Sync @page CSS rule for exact 5in x 7in portrait single-page physical printing
   useEffect(() => {
     const styleId = 'dynamic-print-page-style';
     let styleEl = document.getElementById(styleId) as HTMLStyleElement | null;
@@ -43,11 +49,8 @@ export default function App() {
       styleEl.id = styleId;
       document.head.appendChild(styleEl);
     }
-    styleEl.textContent =
-      paperSize === 'half-a4'
-        ? '@page { size: A5 portrait; margin: 6mm; }'
-        : '@page { size: A4 portrait; margin: 10mm; }';
-  }, [paperSize]);
+    styleEl.textContent = '@page { size: 5in 7in; margin: 0; }';
+  }, []);
 
   // Preload Jameel Noori Nastaleeq font as soon as the app mounts
   useEffect(() => {
@@ -148,6 +151,8 @@ export default function App() {
    * Never triggers PDF generation, popups, iframes, or new windows.
    */
   const runDirectPrint = () => {
+    printControllerRef.current?.fitNow();
+
     let beforePrintFired = false;
     const handleBeforePrint = () => {
       beforePrintFired = true;
@@ -172,13 +177,15 @@ export default function App() {
   };
 
   const handleDownloadPdfForCurrent = async () => {
-    if (!invoiceRef.current) return;
+    const target = printSheetRef.current;
+    if (!target) return;
+    printControllerRef.current?.fitNow();
     setIsExportingPdf(true);
     try {
-      await downloadInvoicePdf(invoiceRef.current, currentBill.billNumber, paperSize);
+      await downloadInvoicePdf(target, currentBill.billNumber, paperSize);
       setStatusMessage({
         type: 'success',
-        text: `بل نمبر ${currentBill.billNumber} کی PDF کامیابی سے ڈاؤن لوڈ ہو گئی۔`,
+        text: `بل نمبر ${currentBill.billNumber} کی 5×7 انچ PDF کامیابی سے ڈاؤن لوڈ ہو گئی۔`,
       });
     } catch {
       setStatusMessage({
@@ -216,20 +223,24 @@ export default function App() {
   };
 
   const handleDownloadSavedBillPdf = (bill: Bill) => {
-    setCurrentBill({
-      ...bill,
-      items: bill.items.map((item) => ({ ...item })),
+    flushSync(() => {
+      setCurrentBill({
+        ...bill,
+        items: bill.items.map((item) => ({ ...item })),
+      });
+      setActiveTab('editor');
     });
-    setActiveTab('editor');
     window.requestAnimationFrame(() => {
       window.setTimeout(async () => {
-        if (!invoiceRef.current) return;
+        const target = printSheetRef.current;
+        if (!target) return;
+        printControllerRef.current?.fitNow();
         setIsExportingPdf(true);
         try {
-          await downloadInvoicePdf(invoiceRef.current, bill.billNumber, paperSize);
+          await downloadInvoicePdf(target, bill.billNumber, paperSize);
           setStatusMessage({
             type: 'success',
-            text: `بل نمبر ${bill.billNumber} کی PDF کامیابی سے ڈاؤن لوڈ ہو گئی۔`,
+            text: `بل نمبر ${bill.billNumber} کی 5×7 انچ PDF کامیابی سے ڈاؤن لوڈ ہو گئی۔`,
           });
         } catch {
           setStatusMessage({
@@ -266,11 +277,10 @@ export default function App() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         savedBillsCount={savedBills.length}
-        paperSize={paperSize}
-        onPaperSizeChange={setPaperSize}
+        onOpenPrintGuide={() => setShowPrintGuide(true)}
       />
 
-      <main className="print-main mx-auto w-full max-w-[1360px] flex-1 px-4 py-6 sm:px-6 lg:px-8">
+      <main className="no-print print-main mx-auto w-full max-w-[1360px] flex-1 px-4 py-6 sm:px-6 lg:px-8">
         {activeTab === 'editor' ? (
           <div className="print-editor-grid grid grid-cols-1 gap-6 xl:grid-cols-12 items-start">
             {/* Left/Right in RTL: Bill Editor Form */}
@@ -292,12 +302,20 @@ export default function App() {
               />
             </div>
 
-            {/* Live Computerized Invoice Preview & Print Target */}
-            <div className="xl:col-span-6 print-only-container">
+            {/* Live Computerized Invoice Preview */}
+            <div className="xl:col-span-6">
               <div className="no-print mb-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5">
-                <span className="font-urdu text-base font-bold text-[#0B1F3A]">
-                  اصل بل کا لائیو پیش نظارہ ({paperSize === 'half-a4' ? 'نصف A4' : 'A4'})
-                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-urdu text-base font-bold text-[#0B1F3A]">
+                    اصل بل کا لائیو پیش نظارہ
+                  </span>
+                  <span className="rounded bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-xs font-semibold text-[#0F6B43]">
+                    <span dir="ltr" className="font-num font-bold">5 × 7 in</span>{' '}
+                    <span className="font-urdu">
+                      · 1 صفحہ ({Math.round(fitMetrics.scale * 100)}%)
+                    </span>
+                  </span>
+                </div>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
@@ -327,22 +345,25 @@ export default function App() {
             </div>
           </div>
         ) : (
-          <>
-            <SavedBillsHistory
-              bills={savedBills}
-              activeBillId={currentBill.id}
-              onEditBill={handleEditSavedBill}
-              onPrintBill={handlePrintSavedBill}
-              onDownloadBillPdf={handleDownloadSavedBillPdf}
-              onRequestDeleteBill={setBillToDelete}
-              onCreateNewBill={handleNewBill}
-            />
-            <div className="hidden print:block print-only-container">
-              <InvoicePreview bill={currentBill} paperSize={paperSize} />
-            </div>
-          </>
+          <SavedBillsHistory
+            bills={savedBills}
+            activeBillId={currentBill.id}
+            onEditBill={handleEditSavedBill}
+            onPrintBill={handlePrintSavedBill}
+            onDownloadBillPdf={handleDownloadSavedBillPdf}
+            onRequestDeleteBill={setBillToDelete}
+            onCreateNewBill={handleNewBill}
+          />
         )}
       </main>
+
+      {/* Dedicated Fitted 5x7 Inch Single-Page Print & PDF Sheet */}
+      <PrintSheet5x7
+        bill={currentBill}
+        sheetRef={printSheetRef}
+        controllerRef={printControllerRef}
+        onFitChange={setFitMetrics}
+      />
 
       <footer className="no-print border-t border-slate-200 bg-white py-4 text-center">
         <div className="mx-auto max-w-[1360px] px-4 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-slate-600">
@@ -382,6 +403,12 @@ export default function App() {
         variant="danger"
         onConfirm={handleConfirmDeleteBill}
         onCancel={() => setBillToDelete(null)}
+      />
+
+      <PrintInstructionsModal
+        isOpen={showPrintGuide}
+        onClose={() => setShowPrintGuide(false)}
+        onPrintNow={handlePrintCurrentBill}
       />
     </div>
   );

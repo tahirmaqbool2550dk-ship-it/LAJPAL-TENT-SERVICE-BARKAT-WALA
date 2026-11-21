@@ -563,6 +563,14 @@ export const BillEditor: React.FC<BillEditorProps> = ({
         </button>
       </div>
 
+      <p className="mt-3 rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 font-urdu text-xs sm:text-sm text-slate-700">
+        پرنٹ ڈائیلاگ میں کاغذ کا سائز{' '}
+        <span dir="ltr" className="font-num font-bold text-[#0B1F3A]">
+          5 × 7 in
+        </span>{' '}
+        (<span dir="ltr" className="font-latin font-semibold">Custom 5 × 7 inches / Portrait</span>) منتخب کریں — تمام تفصیلات خودکار طور پر ایک صفحے پر فٹ ہوں گی۔
+      </p>
+
       {printBlockedHint && (
         <p
           role="status"
@@ -572,7 +580,11 @@ export const BillEditor: React.FC<BillEditorProps> = ({
           <span dir="ltr" className="font-num font-bold">
             Ctrl + P
           </span>{' '}
-          دبائیں۔
+          دبائیں اور کاغذ کا سائز{' '}
+          <span dir="ltr" className="font-num font-bold">
+            5 × 7 in
+          </span>{' '}
+          منتخب کریں۔
         </p>
       )}
     </section>

@@ -48,22 +48,17 @@ const InvoiceHeaderPhoto: React.FC<{
 
 export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
   bill,
-  paperSize,
   invoiceRef,
 }) => {
   const totals = calculateBillTotals(bill.items, bill.receivedAmount);
-  const isCompact = paperSize === 'half-a4';
+  const isCompact = false;
 
   return (
     <div
       id="printable-invoice"
       ref={invoiceRef}
       dir="rtl"
-      className={`bg-white text-slate-900 border border-slate-300 mx-auto shadow-sm ${
-        isCompact
-          ? 'paper-half-a4 max-w-[560px] p-4 sm:p-5'
-          : 'paper-a4 max-w-[820px] p-5 sm:p-8'
-      }`}
+      className="bg-white text-slate-900 border border-slate-300 mx-auto shadow-sm paper-a4 max-w-[820px] p-5 sm:p-8"
       style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
     >
       {/* Letterhead Header */}
@@ -167,7 +162,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
             کمپیوٹرائزڈ کرایہ بل / انوائس
           </span>
           <span className="font-urdu text-xs sm:text-sm" style={{ color: '#475569' }}>
-            کاغذ کا سائز: {isCompact ? 'نصف A4' : 'A4'}
+            کاغذ کا سائز: <span dir="ltr" className="font-num font-bold">5 × 7</span> انچ
           </span>
         </div>
       </div>
@@ -189,7 +184,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
           <span className="font-urdu font-bold shrink-0" style={{ color: '#0B1F3A' }}>
             گاہک کا نام:
           </span>
-          <span className="font-urdu font-semibold text-left truncate" style={{ color: '#0f172a' }}>
+          <span className="font-urdu font-semibold text-left break-words" style={{ color: '#0f172a' }}>
             {bill.customerName.trim() || '—'}
           </span>
         </div>
@@ -249,7 +244,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
           <span className="font-urdu font-bold shrink-0" style={{ color: '#0B1F3A' }}>
             تقریب کا مقام:
           </span>
-          <span className="font-urdu font-semibold text-left truncate" style={{ color: '#0f172a' }}>
+          <span className="font-urdu font-semibold text-left break-words" style={{ color: '#0f172a' }}>
             {bill.eventVenue.trim() || '—'}
           </span>
         </div>

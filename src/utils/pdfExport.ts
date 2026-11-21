@@ -3,14 +3,14 @@ import { jsPDF } from 'jspdf';
 import { PaperSize } from '../types/bill';
 
 /**
- * Generates a crisp PDF from the rendered #printable-invoice DOM node.
+ * Generates a crisp single-page 5 x 7 inch PDF from the fitted #printable-5x7-sheet DOM node.
  * Uses browser-native SVG foreignObject capture via html-to-image so
  * Urdu RTL ligatures and Jameel Noori Nastaleeq shaping are preserved accurately.
  */
 export async function downloadInvoicePdf(
   element: HTMLElement,
   billNumber: string,
-  paperSize: PaperSize
+  _paperSize: PaperSize = '5x7'
 ): Promise<void> {
   if (document.fonts && document.fonts.ready) {
     await document.fonts.ready;
@@ -38,11 +38,16 @@ export async function downloadInvoicePdf(
 
   const dataUrl = await toPng(element, {
     quality: 1,
-    pixelRatio: 2.5,
+    pixelRatio: 3,
     backgroundColor: '#ffffff',
     style: {
       margin: '0',
       boxShadow: 'none',
+      position: 'relative',
+      left: '0',
+      top: '0',
+      opacity: '1',
+      visibility: 'visible',
     },
   });
 
@@ -53,35 +58,32 @@ export async function downloadInvoicePdf(
     img.onerror = () => reject(new Error('Failed to render invoice image for PDF'));
   });
 
-  // A4 = 210mm x 297mm, Half-A4 (A5) = 148mm x 210mm
-  const format: [number, number] = paperSize === 'half-a4' ? [148, 210] : [210, 297];
+  // Exact 5 inches wide x 7 inches high portrait single-page PDF
   const pdf = new jsPDF({
     orientation: 'portrait',
-    unit: 'mm',
-    format,
+    unit: 'in',
+    format: [5, 7],
     compress: true,
   });
 
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-  const margin = paperSize === 'half-a4' ? 6 : 10;
-  const maxWidth = pageWidth - margin * 2;
-  const maxHeight = pageHeight - margin * 2;
+  const pageWidth = pdf.internal.pageSize.getWidth(); // 5 in
+  const pageHeight = pdf.internal.pageSize.getHeight(); // 7 in
 
+  // #printable-5x7-sheet already includes its own balanced internal page margins (0.13in/0.15in)
   const imgRatio = img.width / img.height;
-  let renderWidth = maxWidth;
+  let renderWidth = pageWidth;
   let renderHeight = renderWidth / imgRatio;
 
-  if (renderHeight > maxHeight) {
-    renderHeight = maxHeight;
+  if (renderHeight > pageHeight) {
+    renderHeight = pageHeight;
     renderWidth = renderHeight * imgRatio;
   }
 
   const offsetX = (pageWidth - renderWidth) / 2;
-  const offsetY = margin;
+  const offsetY = (pageHeight - renderHeight) / 2;
 
   pdf.addImage(dataUrl, 'PNG', offsetX, offsetY, renderWidth, renderHeight, undefined, 'FAST');
 
   const safeFileNum = (billNumber || 'Invoice').replace(/[^\w\u0600-\u06FF-]+/g, '_');
-  pdf.save(`Lajpal_Tent_Bill_${safeFileNum}.pdf`);
+  pdf.save(`Lajpal_Tent_Bill_5x7_${safeFileNum}.pdf`);
 }

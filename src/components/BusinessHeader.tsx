@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { FilePlus2, Archive, Printer } from 'lucide-react';
-import { ActiveTab, PaperSize } from '../types/bill';
+import { FilePlus2, Archive, Printer, HelpCircle } from 'lucide-react';
+import { ActiveTab } from '../types/bill';
 
 interface BusinessHeaderProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
   savedBillsCount: number;
-  paperSize: PaperSize;
-  onPaperSizeChange: (size: PaperSize) => void;
+  onOpenPrintGuide: () => void;
 }
 
 interface PhotoCardProps {
@@ -45,8 +44,7 @@ export const BusinessHeader: React.FC<BusinessHeaderProps> = ({
   activeTab,
   onTabChange,
   savedBillsCount,
-  paperSize,
-  onPaperSizeChange,
+  onOpenPrintGuide,
 }) => {
   return (
     <header className="no-print bg-[#0B1F3A] text-white border-b-4 border-[#C89B3C]">
@@ -152,38 +150,28 @@ export const BusinessHeader: React.FC<BusinessHeaderProps> = ({
             </button>
           </nav>
 
-          {/* Paper Size Toggle for Print & PDF */}
-          <div className="flex items-center gap-2">
+          {/* Single Custom 5x7 Inch Paper Format Indicator & Printer Guide */}
+          <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-slate-300 font-urdu whitespace-nowrap">
               <Printer className="h-4 w-4 text-[#C89B3C]" aria-hidden="true" />
               پرنٹ سائز:
             </span>
-            <div className="inline-flex items-center rounded-lg bg-[#071529] p-1 border border-white/15">
-              <button
-                type="button"
-                onClick={() => onPaperSizeChange('a4')}
-                className={`rounded-md px-3 py-1 text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap shrink-0 ${
-                  paperSize === 'a4'
-                    ? 'bg-[#0F6B43] text-white'
-                    : 'text-slate-300 hover:text-white'
-                }`}
-              >
-                <span dir="ltr" className="font-latin font-bold">A4</span>
-                <span className="font-urdu mr-1.5">(مکمل)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => onPaperSizeChange('half-a4')}
-                className={`rounded-md px-3 py-1 text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap shrink-0 ${
-                  paperSize === 'half-a4'
-                    ? 'bg-[#0F6B43] text-white'
-                    : 'text-slate-300 hover:text-white'
-                }`}
-              >
-                <span className="font-urdu ml-1">نصف</span>
-                <span dir="ltr" className="font-latin font-bold">A4</span>
-              </button>
+            <div className="inline-flex items-center gap-2 rounded-lg bg-[#071529] px-3 py-1.5 border border-white/15">
+              <span dir="ltr" className="font-num text-xs sm:text-sm font-bold text-[#F5D076]">
+                5 × 7 in
+              </span>
+              <span className="font-urdu text-xs sm:text-sm font-semibold text-white">
+                (مکمل بل — 1 صفحہ)
+              </span>
             </div>
+            <button
+              type="button"
+              onClick={onOpenPrintGuide}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-white/20 whitespace-nowrap shrink-0"
+            >
+              <HelpCircle className="h-3.5 w-3.5 text-[#F5D076]" aria-hidden="true" />
+              <span className="font-urdu">پرنٹر سیٹنگز ہدایات</span>
+            </button>
           </div>
         </div>
       </div>

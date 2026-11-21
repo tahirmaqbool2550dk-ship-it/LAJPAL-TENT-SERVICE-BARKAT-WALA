@@ -85,9 +85,441 @@ input[type='number'] {
 }
 
 /* =========================================================
-   PRINT ENGINE — Prints ONLY #printable-invoice cleanly
-   Supports A4 (210mm x 297mm) and Half-A4 / A5 (148mm x 210mm)
+   5 x 7 INCH PRINT SHEET LAYOUT & 4-TIER ADAPTIVE DENSITY
    ========================================================= */
+.print-5x7-wrapper {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 4.98in;
+  height: 6.96in;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.p57-sheet {
+  width: 4.98in;
+  height: 6.96in;
+  box-sizing: border-box;
+  padding: 0.13in 0.15in;
+  background: #ffffff;
+  color: #0f172a;
+  overflow: hidden;
+  direction: rtl;
+  font-family: var(--font-urdu);
+}
+
+.p57-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.p57-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  direction: rtl;
+}
+
+/* Tier 0: Comfortable (default for short/medium bills) */
+.p57-content[data-tier='0'] {
+  --p57-banner-pad: 6px 9px;
+  --p57-photo-h: 46px;
+  --p57-photo-gap: 6px;
+  --p57-en-size: 12px;
+  --p57-ur-title-size: 16.5px;
+  --p57-desc-size: 10px;
+  --p57-contact-size: 9.5px;
+  --p57-wa-size: 12px;
+  --p57-subhead-size: 11.5px;
+  --p57-paper-size: 9.5px;
+  --p57-info-size: 10.5px;
+  --p57-info-py: 2.5px;
+  --p57-info-px: 6px;
+  --p57-table-size: 10.5px;
+  --p57-cell-py: 3px;
+  --p57-cell-px: 5px;
+  --p57-sec-gap: 6px;
+  --p57-urdu-lh: 1.62;
+  --p57-totals-size: 10.5px;
+  --p57-totals-py: 2.5px;
+  --p57-thanks-size: 12px;
+  --p57-stamp-pad: 4px 10px;
+  --p57-stamp-title: 11.5px;
+  --p57-stamp-sub: 10px;
+  --p57-stamp-phone: 9px;
+  --p57-terms-pad: 4px 7px;
+  --p57-terms-title: 10.5px;
+  --p57-terms-size: 9.5px;
+}
+
+/* Tier 1: Compact */
+.p57-content[data-tier='1'] {
+  --p57-banner-pad: 5px 8px;
+  --p57-photo-h: 34px;
+  --p57-photo-gap: 5px;
+  --p57-en-size: 11px;
+  --p57-ur-title-size: 14.5px;
+  --p57-desc-size: 9px;
+  --p57-contact-size: 8.5px;
+  --p57-wa-size: 11px;
+  --p57-subhead-size: 10.5px;
+  --p57-paper-size: 8.5px;
+  --p57-info-size: 9.5px;
+  --p57-info-py: 2px;
+  --p57-info-px: 5px;
+  --p57-table-size: 9.5px;
+  --p57-cell-py: 2px;
+  --p57-cell-px: 4.5px;
+  --p57-sec-gap: 4.5px;
+  --p57-urdu-lh: 1.54;
+  --p57-totals-size: 9.5px;
+  --p57-totals-py: 2px;
+  --p57-thanks-size: 11px;
+  --p57-stamp-pad: 3px 8px;
+  --p57-stamp-title: 10.5px;
+  --p57-stamp-sub: 9px;
+  --p57-stamp-phone: 8.5px;
+  --p57-terms-pad: 3.5px 6px;
+  --p57-terms-title: 9.5px;
+  --p57-terms-size: 8.8px;
+}
+
+/* Tier 2: Dense */
+.p57-content[data-tier='2'] {
+  --p57-banner-pad: 4px 7px;
+  --p57-photo-h: 26px;
+  --p57-photo-gap: 4px;
+  --p57-en-size: 10px;
+  --p57-ur-title-size: 13px;
+  --p57-desc-size: 8.2px;
+  --p57-contact-size: 8px;
+  --p57-wa-size: 10px;
+  --p57-subhead-size: 9.5px;
+  --p57-paper-size: 8px;
+  --p57-info-size: 8.8px;
+  --p57-info-py: 1.5px;
+  --p57-info-px: 4px;
+  --p57-table-size: 8.8px;
+  --p57-cell-py: 1.5px;
+  --p57-cell-px: 4px;
+  --p57-sec-gap: 3.5px;
+  --p57-urdu-lh: 1.48;
+  --p57-totals-size: 8.8px;
+  --p57-totals-py: 1.5px;
+  --p57-thanks-size: 10px;
+  --p57-stamp-pad: 2.5px 7px;
+  --p57-stamp-title: 9.5px;
+  --p57-stamp-sub: 8.5px;
+  --p57-stamp-phone: 8px;
+  --p57-terms-pad: 3px 5px;
+  --p57-terms-title: 9px;
+  --p57-terms-size: 8.2px;
+}
+
+/* Tier 3: Ultra-Dense (used before & with dynamic scale-to-fit) */
+.p57-content[data-tier='3'] {
+  --p57-banner-pad: 3px 6px;
+  --p57-photo-h: 22px;
+  --p57-photo-gap: 3px;
+  --p57-en-size: 9.5px;
+  --p57-ur-title-size: 12px;
+  --p57-desc-size: 7.8px;
+  --p57-contact-size: 7.6px;
+  --p57-wa-size: 9.5px;
+  --p57-subhead-size: 9px;
+  --p57-paper-size: 7.6px;
+  --p57-info-size: 8.4px;
+  --p57-info-py: 1px;
+  --p57-info-px: 4px;
+  --p57-table-size: 8.4px;
+  --p57-cell-py: 1px;
+  --p57-cell-px: 3.5px;
+  --p57-sec-gap: 2.5px;
+  --p57-urdu-lh: 1.44;
+  --p57-totals-size: 8.4px;
+  --p57-totals-py: 1px;
+  --p57-thanks-size: 9.5px;
+  --p57-stamp-pad: 2px 6px;
+  --p57-stamp-title: 9px;
+  --p57-stamp-sub: 8px;
+  --p57-stamp-phone: 7.5px;
+  --p57-terms-pad: 2.5px 5px;
+  --p57-terms-title: 8.5px;
+  --p57-terms-size: 7.8px;
+}
+
+.p57-content .font-urdu {
+  line-height: var(--p57-urdu-lh);
+}
+
+.p57-header-wrap {
+  border-bottom: 1.5px solid #0B1F3A;
+  padding-bottom: 3px;
+  margin-bottom: var(--p57-sec-gap);
+}
+
+.p57-banner {
+  border-radius: 5px;
+  text-align: center;
+  padding: var(--p57-banner-pad);
+}
+
+.p57-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--p57-photo-gap);
+  margin-bottom: 3px;
+}
+
+.p57-photo-box {
+  height: var(--p57-photo-h);
+  border-radius: 3px;
+  border: 1px solid #C89B3C;
+  background-color: #071529;
+  overflow: hidden;
+}
+
+.p57-en-title {
+  font-size: var(--p57-en-size);
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+}
+
+.p57-ur-title {
+  font-size: var(--p57-ur-title-size);
+  line-height: 1.45;
+  margin-top: 1px;
+}
+
+.p57-desc {
+  font-size: var(--p57-desc-size);
+  line-height: var(--p57-urdu-lh);
+  margin-top: 1px;
+}
+
+.p57-contacts {
+  margin-top: 2px;
+  padding-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px 12px;
+  font-size: var(--p57-contact-size);
+  line-height: 1.3;
+}
+
+.p57-wa-icon {
+  width: var(--p57-wa-size);
+  height: var(--p57-wa-size);
+}
+
+.p57-subhead-bar {
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.p57-subhead-title {
+  font-size: var(--p57-subhead-size);
+}
+
+.p57-paper-label {
+  font-size: var(--p57-paper-size);
+}
+
+.p57-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: var(--p57-sec-gap);
+  font-size: var(--p57-info-size);
+}
+
+.p57-info-cell {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 5px;
+  padding: var(--p57-info-py) var(--p57-info-px);
+  border-bottom: 1px solid #cbd5e1;
+  border-left: 1px solid #cbd5e1;
+  min-width: 0;
+}
+
+.p57-info-cell:nth-child(even) {
+  border-left: none;
+}
+
+.p57-info-cell:nth-last-child(-n + 2) {
+  border-bottom: none;
+}
+
+.p57-info-label {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.p57-info-val {
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.p57-table-wrap {
+  margin-bottom: var(--p57-sec-gap);
+}
+
+.p57-table {
+  width: 100%;
+  table-layout: fixed;
+  font-size: var(--p57-table-size);
+}
+
+.p57-th,
+.p57-td {
+  padding: var(--p57-cell-py) var(--p57-cell-px);
+  vertical-align: middle;
+}
+
+.p57-col-idx {
+  width: 28px;
+}
+
+.p57-col-qty {
+  width: 40px;
+}
+
+.p57-col-rate {
+  width: 66px;
+}
+
+.p57-col-total {
+  width: 72px;
+}
+
+.p57-item-name {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.p57-bottom-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: var(--p57-sec-gap);
+}
+
+.p57-totals-box {
+  width: 47%;
+  flex-shrink: 0;
+  overflow: hidden;
+  font-size: var(--p57-totals-size);
+}
+
+.p57-total-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: var(--p57-totals-py) 6px;
+}
+
+.p57-footer-actions {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+
+.p57-sign-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.p57-thanks {
+  font-size: var(--p57-thanks-size);
+}
+
+.p57-sign-line-wrap {
+  padding-top: 6px;
+}
+
+.p57-sign-line {
+  width: 82px;
+  margin-bottom: 1px;
+}
+
+.p57-sign-label {
+  font-size: var(--p57-paper-size);
+}
+
+.p57-stamp {
+  padding: var(--p57-stamp-pad);
+  flex-shrink: 0;
+}
+
+.p57-stamp-title {
+  font-size: var(--p57-stamp-title);
+  line-height: 1.4;
+}
+
+.p57-stamp-sub {
+  font-size: var(--p57-stamp-sub);
+  line-height: 1.35;
+}
+
+.p57-stamp-phone {
+  font-size: var(--p57-stamp-phone);
+  line-height: 1.3;
+  margin-top: 1px;
+}
+
+.p57-terms {
+  padding: var(--p57-terms-pad);
+}
+
+.p57-terms-title {
+  font-size: var(--p57-terms-title);
+  padding-bottom: 1px;
+  margin-bottom: 2px;
+}
+
+.p57-terms-list {
+  font-size: var(--p57-terms-size);
+  line-height: var(--p57-urdu-lh);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* =========================================================
+   PRINT ENGINE — Prints ONLY #printable-5x7-sheet on ONE
+   exact 5in x 7in (portrait) page with ZERO 2nd/blank page
+   ========================================================= */
+@page {
+  size: 5in 7in;
+  margin: 0;
+}
+
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
@@ -99,57 +531,67 @@ input[type='number'] {
     background: #ffffff !important;
     margin: 0 !important;
     padding: 0 !important;
-    width: 100% !important;
-    height: auto !important;
+    width: 5in !important;
+    height: 6.96in !important;
+    max-height: 6.96in !important;
     min-height: 0 !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     direction: rtl !important;
     font-family: var(--font-urdu) !important;
   }
 
-  /* Hide every non-invoice element in the application */
+  /* Hide all website controls, navigation, editor, history, screen preview, modals */
   .no-print {
     display: none !important;
   }
 
-  /* Reset outer app shell and grid containers so invoice uses 100% page width */
-  .print-app-shell,
-  .print-main,
-  .print-editor-grid {
+  .print-app-shell {
     display: block !important;
-    width: 100% !important;
-    max-width: none !important;
+    width: 5in !important;
+    height: 6.96in !important;
+    max-height: 6.96in !important;
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden !important;
     background: #ffffff !important;
   }
 
-  /* Ensure the print wrapper spans full printable area without scrollbars or shadows */
-  .print-only-container {
-    display: block !important;
+  .print-5x7-wrapper {
     position: static !important;
-    grid-column: 1 / -1 !important;
-    width: 100% !important;
-    max-width: none !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: auto !important;
+    pointer-events: auto !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    width: 5in !important;
+    height: 6.96in !important;
+    max-height: 6.96in !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  #printable-5x7-sheet {
+    width: 4.98in !important;
+    height: 6.96in !important;
+    max-height: 6.96in !important;
+    margin: 0 !important;
+    overflow: hidden !important;
     box-shadow: none !important;
     border: none !important;
-    background: #ffffff !important;
-  }
-
-  #printable-invoice {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-    box-shadow: none !important;
     border-radius: 0 !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  #printable-invoice.paper-half-a4 {
-    font-size: 12px !important;
+    background: #ffffff !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
